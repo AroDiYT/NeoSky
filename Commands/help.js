@@ -15,7 +15,7 @@ module.exports = {
     if(args.length < 1) {
          let fs = require('fs')
 
-         let dir = "/home/darii-chan/SourceCode/Discord Applications/Node Applications/NeoSky/Bot #1/Commands"
+         let dir = __dirname
 
          let c = fs.readdirSync(dir)
          .filter(file => file.endsWith('js'));

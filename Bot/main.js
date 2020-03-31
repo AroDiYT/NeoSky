@@ -18,11 +18,11 @@ class Main {
       let c = args.shift().toLowerCase();
 
       let Commands =
-        fs.readdirSync('/home/darii-chan/SourceCode/Discord Applications/Node Applications/NeoSky/Bot #1/Commands')
+        fs.readdirSync(__dirname.slice(0,-4) + '/Commands')
         .filter(file => file.endsWith('.js'));
 
       for (let f of Commands) {
-        let cmd = require('/home/darii-chan/SourceCode/Discord Applications/Node Applications/NeoSky/Bot #1/Commands/' +
+        let cmd = require(__dirname.slice(0,-4) + '/Commands/' +
           f, true);
         if (cmd.name == c) {
           try {
