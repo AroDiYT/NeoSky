@@ -270,7 +270,7 @@ class PF {
         data.push(`**\`Group:\`** __\`${get.race}\`__`)
         if(get.bio) embed.addField("`Bio`", get.bio);
         if(get.image) embed.setThumbnail(get.image);
-        if(get.quote) embed.setFooter('"' + get.quote + '"');
+        if(get.quote) embed.setFooter('"' + get.quote.replace(/@quote/g, "'") + '"');
         embed.setColor("AQUA");
         if(get.color) embed.setColor(get.color)
         embed.setDescription(data.join("\n"));
@@ -307,6 +307,7 @@ class PF {
     let update = new Discord.RichEmbed()
     update.setAuthor(`Update/Add`, msg.author.avatarURL);
     if(['bio','desc','background','description'].includes(args[0].toLowerCase())) {
+      if(Functions.clean(args.join(' ').slice(args[0].length)).length > 1000) return msg.channel.send("you can use document links as reference, due to discord limits we cannot post this bio in your profile.");
       db.each(`select * from [Players Guild(${g.id})] where player_id = '${mem.id}'`, function(error, pd) {
         db.run(`update [Profile Player(${mem.id}) -> Guild(${g.id})]
                 set bio = '${Functions.clean(args.join(' ').slice(args[0].length))}'
@@ -391,21 +392,20 @@ class PF {
         let stats = new Discord.RichEmbed();
         let data = [];
         stats.setAuthor(`${get2.name}`, get2.image || mem.avatarURL);
-        data.push(`**Health → ${get.health_current}/${get.health_max}**`)
-        data.push(`**Stamina → ${get.stamina_current}/${get.stamina_max}**`)
-        data.push(`**Mana → ${get.mana_current}/${get.mana_max}**`)
+        data.push(`[**Health → ${get.health_current}/${get.health_max}**]`)
+        data.push(`[**Stamina → ${get.stamina_current}/${get.stamina_max}**]`)
+        data.push(`[**Mana → ${get.mana_current}/${get.mana_max}**]\n`)
         if(get.level) {
-          stats.addField(`\`Lvl: ${get.level}\``,`**[${get.xp}/${get.level*10}]**`);
+          stats.addField(`\`Lvl: ${get.level}\``,`**[${get.xp}/${get.level*10}]**`, true);
         }
-        data.push(`**Armor: ${get.armor}**`);
-        data.push(`__\`Roll-Bonuses\`__\n**Strength: ${get.strength}**\n**Speed: ${get.speed}**\n**Talking: ${get.talking}**\n**ATK-BASE: ${get.attack_base}**`)
+        data.push(`__\`Roll-Bonuses\`__\n**Strength: ${get.strength}**\n**Speed: ${get.speed}**\n**Talking: ${get.talking}**\n**Armor: ${get.armor}**\n**ATK-BASE: ${get.attack_base}**`)
         if(get.balance_premium) {
-          stats.addField("`Currency`", `Premium -> ${get.balance_premium}\nCash -> ${get.balance}`)
+          stats.addField("`Currency`", `Premium -> ${get.balance_premium}\nCash -> ${get.balance}`, true)
         } else {
-          stats.addField("`Currency`", `Cash -> ${get.balance}`)
+          stats.addField("`Currency`", `Cash -> ${get.balance}`, true)
         }
         if(!(get.equiped_id) == "0" && get.equiped_id) data.push(`\`Equiped\` -> \`WIP\``);
-        stats.setDescription(data.join("\n"));
+        stats.setDescription(data.join(" "));
         return msg.channel.send(stats);
         })
       })

@@ -53,13 +53,17 @@ module.exports = {
         db.get(`select slot from [Players Guild(${g.id})] where player_id = '${mem.id}'`, function(err, dt) {
           if(err) return msg.channel.send("no data\n\n" + err)
           db.run(`update [Profile Player(${mem.id}) -> Guild(${g.id})]
-                  set quote = '${quote}'
+                  set quote = '${Functions.clean(quote)}'
                   where character_slot = '${dt.slot}'`)
         })
         msg.channel.send("Quote updated.")
       } else if (args[0] == "stats") {
         Pfsql.show_stats(msg.author, msg.guild, msg)
       } else if (args[0] == "inv" || args[0] == "inventory") {
+        Pfsql.Load_Inv(msg.author, msg.guild, msg);
+      } else if(args[0] == "p" || args[0] == "all") {
+        Pfsql.show(msg.author, msg.guild, msg);
+        Pfsql.show_stats(msg.author, msg.guild, msg);
         Pfsql.Load_Inv(msg.author, msg.guild, msg);
       }
     } else if(args[1] == "list") {

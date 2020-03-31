@@ -64,7 +64,7 @@ class DB {
   Insert_NewSlot(mem, g) {
     let amount = [];
     setTimeout(complete, 500);
-     db.each(`SELECT count(*) FROM [Profile Player(500662838289760256) -> Guild(${msg.guild.id})]
+     db.each(`SELECT count(*) FROM [Profile Player(500662838289760256) -> Guild(${g.id})]
      WHERE  ran_setup = "true";
     `, (err, row) => {
         amount = row['count(*)']
