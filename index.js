@@ -3,7 +3,7 @@ Discord = require('discord.js');
 Config = require('./config.json');
 
 F = require('./Bot/functions.js')
-Functions = new F();
+FS = new F();
 client = new Discord.Client();
 
 fs = require('fs');

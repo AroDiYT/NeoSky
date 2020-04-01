@@ -66,6 +66,73 @@ class Main {
     client.on("guildMemberCreate", ()=> {
       Dsql.generate_tables();
     })
+    client.on('message', msg => {
+     if(msg.author.id == client.user.id) return;
+     if(msg.author.bot) return;
+     if(msg.guild == null && !msg.content.startsWith('&')) {
+       let embed = new Discord.RichEmbed();
+       embed.setDescription(`↓__\`Direct Message\`__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←`);
+       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed)
+     } else if(!msg.content.startsWith('&')) {
+       try {
+         let embed = new Discord.RichEmbed();
+         embed.setDescription(`
+         ↓__**\`${msg.guild.name} - ${msg.channel.name}\`**__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←
+         `);
+         client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
+       } catch (err) {
+         console.log(`↓__**\`${msg.guild.name} - ${msg.channel.name}\`**__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←`)
+       }
+     }
+   })
+   client.on('messageUpdate', (msg1,msg2) => {
+     if(msg2.author.id == client.user.id) return;
+     if(msg2.author.bot) return;
+     if(msg2.guild == null && !msg2.content.startsWith('&')) {
+       let embed = new Discord.RichEmbed();
+       embed.setDescription(`↓__\`Direct Message\`__ → **\`${msg2.author.username}\`**↓\n → ${msg1.content} ←\n\`Edited to\`\n→ ${msg2.content} ←`);
+       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed)
+     } else if(!msg2.content.startsWith('&')) {
+       try {
+         let embed = new Discord.RichEmbed();
+         embed.setDescription(`
+         ↓__**\`${msg1.guild.name} - ${msg1.channel.name}\`**__ → **\`${msg1.author.username}\`**↓\n EDIT → ${msg2.content} ←
+         `);
+         client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
+       } catch (err) {
+         console.log(`↓__**\`${msg1.guild.name} - ${msg1.channel.name}\`**__ → **\`${msg1.author.username}\`**↓\n → ${msg2.content} ←`)
+       }
+     }
+   })
+   client.on("messageDeleteBulk", function(messages){
+     let embed = new Discord.RichEmbed();
+     embed.setDescription(`
+     ↓*Multiple messages have been deleted at once*
+     `);
+     embed.addField("Messages:",messages)
+     client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
+   });
+   client.on("messageDelete", function(msg){
+     if(msg.guild == null && !msg.content.startsWith('&')) {
+       let embed = new Discord.RichEmbed();
+       embed.setDescription(`↓__\`Direct Message\`__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←`);
+       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed)
+     } else if(!msg.content.startsWith('&')) {
+       let embed = new Discord.RichEmbed();
+       embed.setDescription(`
+       ↓__\`${msg.guild.name} - ${msg.channel.name}\`__ → **\`${msg.author.username}\`**↓\n***Message Deleted***\n\n → ${msg.content} ←
+       `);
+       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
+     }
+   });
+
+   client.on("channelDelete", function(channel){
+       console.log(`channelDelete: ${channel}`);
+   });
+
+   client.on("channelCreate", function(channel){
+       console.log(`channelCreate: ${channel}`);
+   });
   }
   bot_status(text) {
     client.user.setActivity(text)
