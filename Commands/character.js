@@ -1,18 +1,21 @@
 module.exports = {
   name: "character",
-  aliases: ['ch','pf','me'],
+  desc: "This command follows up on all profile based functions.",
 
-  desc: "The character module.",
+  aliases: ['c'],
 
-  chainable: false,
-  argruments: ['__&ch (@mention) option (args)__\n', '**Options:** (mention only works with LIST and just &ch @user)',
-  '```css\n[ch new] --> [new character]\n```','```css\n[ch setup] --> [edit current char]\n```',
-   '```css\n[ch list] --> [list all chars]\n```','```css\n[ch to (name or slot)] --> [changes character]\n```',
-   '```css\n[ch add (bio or image) (link/upload)] \n--> [changes characters BIO or IMAGE]\n```','```css\n[ch set color (color_name)] --> [changes embed color]\n```','```css\n[ch set quote (quote)] --> [changes characters quote]\n```','```css\n[ch] --> [shows current profile]\n```'],
+  cat: "basic",
 
-  category: "RPG",
+  subs: ['(none)',
+  '@mention', 'list', 'new', 'setup', 'to', 'add', 'set', 'stats', 'inventory', 'all'],
+  subsinfo: ['Shows basic profile',
+  'Shows other players (list) of characters or (profile).',
+  'Shows your list of characters [Alias: ls]','Creates a new characters.',
+  'Edits current character.','Switch between your characters using name or slot',
+  'Add a (bio) or (image) to your profile.','set your profiles (color) or (quote)',
+  'Shows your overview of stats.','Shows your inventory [Alias: inv]',
+  'Shows your stats, profile and inventory at once. [Alias: p]'],
 
-  permissions: "none",
 
   async execute(msg, args) {
     if(args.length < 1) {

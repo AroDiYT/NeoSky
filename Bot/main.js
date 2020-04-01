@@ -1,141 +1,158 @@
-class Main {
-  login(token) {
-    client.login(token)
-    client.once('ready', () => {
-      console.log(`
-                  [Client] → Logged in as ${client.user.username}
-                  `)
-                  Dsql.generate_tables();
-    })
+
+  fs = require('fs');
+
+class Command_Client {
+  get_files(location) {
+    const files = fs.readdirSync(location).filter(f => f.endsWith('.js'));
+    return files;
   }
-  command_client() {
-    client.on('message', msg => {
-      let prefix = '&'
-      if (msg.author.id == client.user.id) return;
-      if (!msg.content.startsWith(prefix)) return;
 
-      let args = msg.content.slice(prefix.length).split(/ +/);
-      let c = args.shift().toLowerCase();
-
-      let Commands =
-        fs.readdirSync(__dirname.slice(0,-4) + '/Commands')
-        .filter(file => file.endsWith('.js'));
-
-      for (let f of Commands) {
-        let cmd = require(__dirname.slice(0,-4) + '/Commands/' +
-          f, true);
-        if (cmd.name == c) {
-          try {
-            cmd.execute(msg, args);
-          } catch (err) {
-            msg.channel.send('due to an error I was unable to execute this command.')
-            try {
-              let log = new Discord.RichEmbed()
-              log.setAuthor(`${msg.author.username}`, msg.author.avatarURL)
-              log.setDescription(`Has errored following command:\n**${c}**\n
-                \nError: ${err}`);
-              msg.guild.channels.find(ch => ch.name == "error-log").send(log)
-            } catch (err) {
-              console.error(err)
-            }
-          }
-        } else if (cmd.aliases && cmd.aliases.includes(c)) {
-          try {
-            cmd.execute(msg, args);
-          } catch (err) {
-            msg.channel.send('due to an error I was unable to execute this command.')
-            try {
-              let log = new Discord.RichEmbed()
-              log.setAuthor(`${msg.author.username}`, msg.author.avatarURL)
-              log.setDescription(`Has errored following command:\n**${c}**\n
-                \nError: ${err}`);
-              msg.guild.channels.find(ch => ch.name == "error-log").send(log)
-            } catch (err) {
-              console.error(err)
-            }
-          }
-        } else if (!(isNaN(c)) && c < 11 && c > 0) {
-          msg.reply('WIP')
-          return;
-        }
+  find_cmd(searchterm, files) {
+    for(const command of files) {
+      let cmd = require(__dirname.slice(0,-4) + "/Commands/" + command)
+      if(cmd.name.toLowerCase() == searchterm || cmd.aliases.includes(searchterm)) {
+        return cmd;
       }
-    })
-    client.on("guildCreate", ()=> {
-      Dsql.generate_tables();
-    })
-    client.on("guildMemberCreate", ()=> {
-      Dsql.generate_tables();
-    })
-    client.on('message', msg => {
-     if(msg.author.id == client.user.id) return;
-     if(msg.author.bot) return;
-     if(msg.guild == null && !msg.content.startsWith('&')) {
-       let embed = new Discord.RichEmbed();
-       embed.setDescription(`↓__\`Direct Message\`__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←`);
-       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed)
-     } else if(!msg.content.startsWith('&')) {
-       try {
-         let embed = new Discord.RichEmbed();
-         embed.setDescription(`
-         ↓__**\`${msg.guild.name} - ${msg.channel.name}\`**__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←
-         `);
-         client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
-       } catch (err) {
-         console.log(`↓__**\`${msg.guild.name} - ${msg.channel.name}\`**__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←`)
-       }
-     }
-   })
-   client.on('messageUpdate', (msg1,msg2) => {
-     if(msg2.author.id == client.user.id) return;
-     if(msg2.author.bot) return;
-     if(msg2.guild == null && !msg2.content.startsWith('&')) {
-       let embed = new Discord.RichEmbed();
-       embed.setDescription(`↓__\`Direct Message\`__ → **\`${msg2.author.username}\`**↓\n → ${msg1.content} ←\n\`Edited to\`\n→ ${msg2.content} ←`);
-       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed)
-     } else if(!msg2.content.startsWith('&')) {
-       try {
-         let embed = new Discord.RichEmbed();
-         embed.setDescription(`
-         ↓__**\`${msg1.guild.name} - ${msg1.channel.name}\`**__ → **\`${msg1.author.username}\`**↓\n EDIT → ${msg2.content} ←
-         `);
-         client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
-       } catch (err) {
-         console.log(`↓__**\`${msg1.guild.name} - ${msg1.channel.name}\`**__ → **\`${msg1.author.username}\`**↓\n → ${msg2.content} ←`)
-       }
-     }
-   })
-   client.on("messageDeleteBulk", function(messages){
-     let embed = new Discord.RichEmbed();
-     embed.setDescription(`
-     ↓*Multiple messages have been deleted at once*
-     `);
-     embed.addField("Messages:",messages)
-     client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
-   });
-   client.on("messageDelete", function(msg){
-     if(msg.guild == null && !msg.content.startsWith('&')) {
-       let embed = new Discord.RichEmbed();
-       embed.setDescription(`↓__\`Direct Message\`__ → **\`${msg.author.username}\`**↓\n → ${msg.content} ←`);
-       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed)
-     } else if(!msg.content.startsWith('&')) {
-       let embed = new Discord.RichEmbed();
-       embed.setDescription(`
-       ↓__\`${msg.guild.name} - ${msg.channel.name}\`__ → **\`${msg.author.username}\`**↓\n***Message Deleted***\n\n → ${msg.content} ←
-       `);
-       client.guilds.get('693813732102504508').channels.get('694628234830151700').send(embed);
-     }
-   });
-
-   client.on("channelDelete", function(channel){
-       console.log(`channelDelete: ${channel}`);
-   });
-
-   client.on("channelCreate", function(channel){
-       console.log(`channelCreate: ${channel}`);
-   });
+    }
   }
-  bot_status(text) {
-    client.user.setActivity(text)
+
+  execute_cmd(cmd, m, args) {
+    try {
+      cmd.exec(m, args)
+    } catch (err) {
+      return console.error(err);
+    }
+  }
+
+  search_command_usage() {
+    C.on('message', async m => {
+      const prefix = '&' /* TODO: use config */
+
+      if (!m.content.startsWith(prefix)) return;
+      if (m.author.id == C.user.id) return;
+
+      const args = m.content.slice(prefix.length).split(/ +/)
+      const searchterm = args.shift().toLowerCase();
+
+      if(searchterm == "help") {
+        return CC.help_cmd(m, args);
+      } else {
+
+        const files = await CC.get_files(__dirname.slice(0,-4) + "/Commands");
+        const cmd = await CC.find_cmd(searchterm, files);
+
+        if(cmd)
+        return CC.execute_cmd(cmd, m, args);
+      }
+
+    })
+    C.on("guildCreate", () => {
+      Dsql.generate_tables();
+    })
+    C.on("guildMemberCreate", () => {
+      Dsql.generate_tables();
+    })
+  }
+
+  async help_cmd(m, args) {
+    let girl = CC.get_files(__dirname.slice(0, -4) + "/Commands");
+    for(const dick of girl) {
+        let fucktape = require(__dirname.slice(0,-4) + "/Commands/" + dick);
+        if(!(args.length < 1)) {
+        if (fucktape.name.toLowerCase() == args[0].toLowerCase()) {
+          if(fucktape.subs && args.length > 1 && fucktape.subs.includes(args[1].toLowerCase())) {
+            let count = 0;
+            fucktape.subs.forEach(sub => {
+              if(sub == args[1].toLowerCase()) {
+                count += 1
+                let emmy = EM.new_embed();
+                EM.set(emmy, "title", fucktape.name + " → " + sub);
+                EM.set(emmy, "desc", fucktape.subsinfo[count - 1]);
+                EM.set(emmy, "color", "DARK_GREEN");
+                return m.channel.send(emmy)
+              } else {
+                count += 1
+              }
+            })
+          } else {
+            let emmy = EM.new_embed()
+            EM.set(emmy, "title", "The Manual");
+            EM.set(emmy, "desc", `**\`[${fucktape.name}]\`**\n${fucktape.desc}\n\n\`Aliases:\`\n${fucktape.aliases.join(', ') || "none"}`);
+            //AQUA, GREEN, BLUE, PURPLE, GOLD, ORANGE, RED, GREY, DARKER_GREY, NAVY,
+            //DARK_AQUA, DARK_GREEN, DARK_BLUE, DARK_PURPLE, DARK_GOLD, DARK_ORANGE,
+            //DARK_RED, DARK_GREY, LIGHT_GREY, DARK_NAVY, LUMINOUS_VIVID_PINK, DARK_VIVID_PINK
+            EM.set(emmy, "color", "LUMINOUS_VIVID_PINK"); // *oh oh oh*
+            if(fucktape.subs) {
+              EM.add(emmy, "subcommands", fucktape.subs.join(', '));
+            }
+            return m.channel.send(emmy);
+          }
+        } else if(fucktape.aliases && fucktape.aliases.includes(args[0].toLowerCase())) {
+              if(fucktape.subs && args.length > 1 && fucktape.subs.includes(args[1].toLowerCase())) {
+                let count = 0;
+                fucktape.subs.forEach(sub => {
+                  if(sub == args[1].toLowerCase()) {
+                    count += 1
+                    let emmy = EM.new_embed();
+                    EM.set(emmy, "title", fucktape.name + " → " + sub);
+                    EM.set(emmy, "desc", fucktape.subsinfo[count - 1]);
+                    EM.set(emmy, "color", "DARK_GREEN");
+                    return m.channel.send(emmy)
+                  } else {
+                    count += 1
+                  }
+                })
+
+
+          } else {
+            let emmy = EM.new_embed()
+            EM.set(emmy, "title", "The Manual");
+            EM.set(emmy, "desc", `**\`[${fucktape.name}]\`**\n${fucktape.desc}\n\n\`Aliases:\`\n${fucktape.aliases.join(', ') || "none"}`);
+            //AQUA, GREEN, BLUE, PURPLE, GOLD, ORANGE, RED, GREY, DARKER_GREY, NAVY,
+            //DARK_AQUA, DARK_GREEN, DARK_BLUE, DARK_PURPLE, DARK_GOLD, DARK_ORANGE,
+            //DARK_RED, DARK_GREY, LIGHT_GREY, DARK_NAVY, LUMINOUS_VIVID_PINK, DARK_VIVID_PINK
+            EM.set(emmy, "color", "LUMINOUS_VIVID_PINK"); // *oh oh oh*
+            if(fucktape.subs) {
+              EM.add(emmy, "subcommands", fucktape.subs.join(', '));
+            }
+            return m.channel.send(emmy);
+          }
+
+      } else if (fucktape.cat.toLowerCase() == args[0].toLowerCase()) {
+        let category = require(__dirname + '/cats.json');
+        let desc = category[args.join(' ').toLowerCase()]
+        let all_cmds = [];
+        for(const cmd_file of girl) {
+          let command = require(__dirname.slice(0,-4) + "/Commands/" + cmd_file);
+          if(command.cat.toLowerCase() == args.join().toLowerCase()) {
+            all_cmds.push(command.name);
+          }
+
+        }
+        let emmy = EM.new_embed();
+        EM.set(emmy, "title", args.join(' ').toUpperCase());
+        EM.set(emmy, "desc", desc);
+        EM.set(emmy, "color", "DARK_NAVY");
+        EM.add(emmy, "Commands",all_cmds.join(', '))
+        return m.channel.send(emmy);
+      }
+      } else {
+        let list_name = [];
+        for(const cmd_file of girl) {
+          let command = require(__dirname.slice(0,-4) + "/Commands/" + cmd_file);
+          if(list_name.includes(command.cat)){
+          }else{
+            list_name.push(command.cat)
+          }
+
+        }
+        let emmy = await EM.new_embed();
+        EM.set(emmy, "title", "The Manual");
+        EM.set(emmy, "desc", "Use &help (command_name or category_name) to view more information.");
+        EM.add(emmy, "Categories",list_name.join('\n'))
+        return m.channel.send(emmy);
+      }
+    }
   }
 }
-module.exports = Main;
+module.exports = Command_Client;

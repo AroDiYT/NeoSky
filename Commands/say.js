@@ -1,11 +1,14 @@
 module.exports = {
   name: "say",
+  desc: "Responds with given argruments.",
+
   aliases: ['speak'],
-  desc: "This command takes argruments from your input and makes the bot repeat it.",
-  chainable: true,
-  argruments: ['Text -> plain text'],
-  category: "Basic",
-  permissions: "MANAGE_MESSAGES",
+
+  cat: "basic",
+
+  subs: ['to'],
+  subsinfo: ['The bot dms the player with your message.'],
+
 
   async execute(msg, args) {
     if(args[0] == "to") {

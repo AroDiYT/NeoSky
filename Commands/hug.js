@@ -1,15 +1,14 @@
 module.exports = {
   name: "hug",
-  aliases: ['huggies'],
+  desc: "Hug the people that deserve it! or need it!",
 
-  desc: "hug your friends or loved ones-",
+  aliases: null,
 
-  chainable: true,
-  argruments: ['mention -> @user'],
+  cat: "emote",
 
-  category: "emotes",
+  subs: null,
+  subsinfo: null,
 
-  permissions: "none",
 
   async execute(msg, args) {
     if(msg.mentions.users.first()) {

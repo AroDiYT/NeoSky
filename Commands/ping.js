@@ -1,18 +1,15 @@
 module.exports = {
   name: "ping",
+  desc: "returns pong;",
+
   aliases: ['pong'],
 
-  desc: "This shows our PING",
+  cat: "basic",
 
-  chainable: true,
-  argruments: ['none'],
+  subs: null,
+  subsinfo: null,
 
-  category: "Basic",
-
-  permissions: "none",
-
-  async execute(message, args) {
-    message.channel.send(new Date().getTime() - message.createdTimestamp + " ms");
+  async exec(msg, args) {
+    msg.reply(new Date().getTime() - msg.createdTimestamp + " ms")
   }
-
 }

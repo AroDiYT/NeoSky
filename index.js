@@ -1,20 +1,23 @@
 
 Discord = require('discord.js');
+D = Discord;
 Config = require('./config.json');
 
 F = require('./Bot/functions.js')
 FS = new F();
+EM = new F();
 client = new Discord.Client();
-
+C = client;
 fs = require('fs');
 
 const nekoslife = require('nekos.life');
 neko = new nekoslife();
 
 const Bot = require('./Bot/main.js');
+CC = new Bot();
 
-new Bot().command_client()
-new Bot().login(Config.bot_token)
+new Bot().search_command_usage()
+client.login(Config.bot_token)
 
 let sqlite3 = require('sqlite3').verbose()
 db = new sqlite3.Database('./Database/Players.db', (err) => {

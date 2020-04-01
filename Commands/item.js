@@ -1,15 +1,14 @@
 module.exports = {
   name: "item",
-  aliases: ['i'],
-
   desc: "Item Command",
 
-  chainable: false,
-  argruments: ['```css\n[item search] -> [Finds an item in our database.]\n```','```css\n[item addto] -> [adds item to ones inventory (admin)]\n```','```css\n[item new] -> [creates new item.(admin)]\n```'],
+  aliases: ['i'],
 
-  category: "RPG",
+  cat: "inventory",
 
-  permissions: "",
+  subs: ['search','addto[admin]','new[admin]'],
+  subsinfo: ['Search an item in our database.','Add one item to one\'s inventory','create an new item.'],
+
 
   async execute(msg, args) {
     if(args[0] == "search") {

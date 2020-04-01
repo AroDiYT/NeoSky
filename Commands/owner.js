@@ -1,15 +1,14 @@
 module.exports = {
-  name: "o",
-  aliases: [''],
+  name: "owner",
+  desc: "Owner Category",
 
-  desc: "Evaluates given code",
+  aliases: ['o'],
 
-  chainable: false,
-  argruments: ['code -> JS'],
+  cat: "Developer",
 
-  category: "owner",
+  subs: ['eval'],
+  subsinfo: ['EValuates Javascript Code'],
 
-  permissions: "admin",
 
   async execute(msg, args) {
     if(!['339475044172431360','500662838289760256','694104913210245240'].includes(msg.author.id)) return msg.channel.send("What tf you tryna do?")
