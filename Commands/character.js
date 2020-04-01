@@ -4,7 +4,7 @@ module.exports = {
 
   aliases: ['c'],
 
-  cat: "basic",
+  cat: "profile",
 
   subs: ['(none)',
   '@mention', 'list', 'new', 'setup', 'to', 'add', 'set', 'stats', 'inventory', 'all'],

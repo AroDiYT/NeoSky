@@ -4,7 +4,7 @@ module.exports = {
 
   aliases: ['o'],
 
-  cat: "Developer",
+  cat: "developer",
 
   subs: ['eval'],
   subsinfo: ['EValuates Javascript Code'],
