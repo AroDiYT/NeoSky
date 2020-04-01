@@ -10,7 +10,7 @@ module.exports = {
   subsinfo: ['Search an item in our database.','Add one item to one\'s inventory','create an new item.'],
 
 
-  async execute(msg, args) {
+  async exec(msg, args) {
     if(args[0] == "search") {
       args.shift();
     if(args.length < 1) return msg.channel.send("Provide search term.");

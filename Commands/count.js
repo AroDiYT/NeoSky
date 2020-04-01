@@ -10,7 +10,7 @@ module.exports = {
   subsinfo: null,
 
 
-  async execute(msg, args) {
+  async exec(msg, args) {
     if(args.length < 1) {
       msg.channel.send("Invalid input")
     } else {

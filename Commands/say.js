@@ -10,7 +10,7 @@ module.exports = {
   subsinfo: ['The bot dms the player with your message.'],
 
 
-  async execute(msg, args) {
+  async exec(msg, args) {
     if(args[0] == "to") {
       args.shift();
       if(!msg.mentions.users.first()) return msg.channel.send('you have to mention a user (&speak to @user (text))');

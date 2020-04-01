@@ -17,7 +17,7 @@ module.exports = {
   'Shows your stats, profile and inventory at once. [Alias: p]'],
 
 
-  async execute(msg, args) {
+  async exec(msg, args) {
     if(args.length < 1) {
       Pfsql.show(msg.author, msg.guild, msg);
     } else if (!msg.mentions.users.first()){

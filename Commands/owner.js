@@ -10,7 +10,7 @@ module.exports = {
   subsinfo: ['EValuates Javascript Code'],
 
 
-  async execute(msg, args) {
+  async exec(msg, args) {
     if(!['339475044172431360','500662838289760256','694104913210245240'].includes(msg.author.id)) return msg.channel.send("What tf you tryna do?")
     if(!args[0].startsWith("eval")) return msg.channel.send('no');
     try {

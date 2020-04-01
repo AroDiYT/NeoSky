@@ -10,7 +10,7 @@ class Command_Client {
   find_cmd(searchterm, files) {
     for(const command of files) {
       let cmd = require(__dirname.slice(0,-4) + "/Commands/" + command)
-      if(cmd.name.toLowerCase() == searchterm || cmd.aliases.includes(searchterm)) {
+      if(cmd.name.toLowerCase() == searchterm || cmd.aliases && cmd.aliases.includes(searchterm)) {
         return cmd;
       }
     }
@@ -76,8 +76,14 @@ class Command_Client {
             })
           } else {
             let emmy = EM.new_embed()
+            let dit;
+            if(fucktape.aliases) {
+              dit = fucktape.aliases.join(', ')
+            } else {
+              dit = "none"
+            }
             EM.set(emmy, "title", "The Manual");
-            EM.set(emmy, "desc", `**\`[${fucktape.name}]\`**\n${fucktape.desc}\n\n\`Aliases:\`\n${fucktape.aliases.join(', ') || "none"}`);
+            EM.set(emmy, "desc", `**\`[${fucktape.name}]\`**\n${fucktape.desc}\n\n\`Aliases:\`\n${dit}`);
             //AQUA, GREEN, BLUE, PURPLE, GOLD, ORANGE, RED, GREY, DARKER_GREY, NAVY,
             //DARK_AQUA, DARK_GREEN, DARK_BLUE, DARK_PURPLE, DARK_GOLD, DARK_ORANGE,
             //DARK_RED, DARK_GREY, LIGHT_GREY, DARK_NAVY, LUMINOUS_VIVID_PINK, DARK_VIVID_PINK
@@ -106,8 +112,14 @@ class Command_Client {
 
           } else {
             let emmy = EM.new_embed()
+            let dit;
+            if(fucktape.aliases) {
+              dit = fucktape.aliases.join(', ')
+            } else {
+              dit = "none"
+            }
             EM.set(emmy, "title", "The Manual");
-            EM.set(emmy, "desc", `**\`[${fucktape.name}]\`**\n${fucktape.desc}\n\n\`Aliases:\`\n${fucktape.aliases.join(', ') || "none"}`);
+            EM.set(emmy, "desc", `**\`[${fucktape.name}]\`**\n${fucktape.desc}\n\n\`Aliases:\`\n${dit}`);
             //AQUA, GREEN, BLUE, PURPLE, GOLD, ORANGE, RED, GREY, DARKER_GREY, NAVY,
             //DARK_AQUA, DARK_GREEN, DARK_BLUE, DARK_PURPLE, DARK_GOLD, DARK_ORANGE,
             //DARK_RED, DARK_GREY, LIGHT_GREY, DARK_NAVY, LUMINOUS_VIVID_PINK, DARK_VIVID_PINK
